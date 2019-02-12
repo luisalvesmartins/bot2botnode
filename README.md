@@ -1,5 +1,5 @@
 # bot2botnode
-Bot master to Bot childs communication in node using REST
+Bot master to Bot communication in node using REST (aka bot to bot)
 
 Sample nodejs code to demonstrate a master bot communicating with child bots. The bot is created using [Bot Framework][1]
 
@@ -36,6 +36,13 @@ The code is commented and is built on top of the echo bot sample. Search for the
 
 //#endregion 
 ```
+
+Client bot code not included. Business logic to decide which child bot to communicate not included.
+
+Change the client bot info in the *getChildBotList* function.
+*getChildBotList* returns an array to highlight there should be a list of child bots that are called from the master bot.
+
+Child bots can call other child bots assuming the same principle. This communication will be invisible to the master bot.
 
 ## Testing the bot using Bot Framework Emulator **v4**
 [Bot Framework Emulator][5] is a desktop application that allows bot developers to test and debug their bots on localhost or running remotely through a tunnel.
