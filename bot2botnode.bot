@@ -1,0 +1,18 @@
+{
+    "name": "bot2botnode",
+    "description": "",
+    "services": [
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3981/api/messages",
+            "id": "1",
+            "name": "development"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0",
+    "path": "C:\\Source\\bot2botnode\\bot2botnode.bot",
+    "overrides": null
+}
