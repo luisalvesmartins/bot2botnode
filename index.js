@@ -82,6 +82,8 @@ server.post('/api/messages', (req, res) => {
 
 //#region BOT2BOT CODE
 const requestpromise = require('request-promise');
+const jwt = require('jsonwebtoken');
+
 
 server.use(restify.plugins.bodyParser())
 // conversation backchannel
@@ -91,11 +93,17 @@ function conversationCallBack(req, res, next) {
     //console.log("CALLBACK")
     var json=JSON.stringify(req.body);
 
-    //NOT IMPLEMENTED: CHECK AUTHORIZATION OF THE CALLBACK MESSAGE
-
+    //CHECK AUTHORIZATION OF THE CALLBACK MESSAGE
     var p=myBot.getConversation(req.params.conversationId);
+
+    var appId=GetClientAppIdFromAuthorization(req)
+    if (appId==false){
+        console.log("NOT AUTHORIZED");
+        res.send(400);
+    }
+
     var l=myBot.getChildBotList();
-    l.find(x=> x.id==p.BotId);
+    l.find(x=> x.id==p.BotId && x.appId==appId);
     if (l)
     {
         //console.log("SENDING MESSAGE")
@@ -120,5 +128,23 @@ function conversationCallBack(req, res, next) {
         console.log("NOT FOUND " + l);
     }
     res.send(200);
+}
+
+function GetClientAppIdFromAuthorization(req){
+    var authHeader=req.header('Authorization','');
+    if (authHeader.startsWith("Bearer ")) 
+    {
+        var bearerToken = authHeader.substring(7); 
+        var decoded = jwt.decode(bearerToken);
+        if (decoded.aud!="https://api.botframework.com" || decoded.idp!="https://sts.windows.net/d6d49420-f39b-4df7-a1dc-d59a935871db/")
+        {
+            //INVALID AUDIENCE OR ISSUER
+            console.log("INVALID AUDIENCE OR ISSUER")
+            return false;
+        }
+        return decoded.appid;
+    }
+
+    return null;
 }
 //#endregion BOT2BOT CODE
