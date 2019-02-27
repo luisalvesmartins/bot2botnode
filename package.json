@@ -18,6 +18,7 @@
     "dependencies": {
         "botbuilder": "^4.2.0",
         "botframework-config": "^4.2.0",
+        "botframework-connector": "^4.2.1",
         "dotenv": "^6.1.0",
         "jsonwebtoken": "^8.4.0",
         "request": "^2.88.0",

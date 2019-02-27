@@ -5,7 +5,10 @@ Sample nodejs code to demonstrate a master bot communicating with child bots. Th
 
 ## Prerequisites
 
-Child bot application ID, secret and endpoint needs to be known.
+For every child bot you'll need to know:
+- application ID
+- app secret
+- endpoint.
 
 Master bot needs to be acessible from the child bot to enable reply communication.
 
@@ -28,7 +31,7 @@ Master bot needs to be acessible from the child bot to enable reply communicatio
 
 The master bot will have two api endpoints: one for the api/messages and the other for the conversation callback from the childbots.
 When a message is decided to be delivered to a child bot, a REST call is made. In this message the serviceURL is pointing to the master bot.
-The conversation endpoint from the master bot will then send the message back to the channel.
+The conversation endpoint from the master bot will then send the message back to the channel using a proactive message pattern - storing conversation reference and reusing it.
 
 The code is commented and is built on top of the echo bot sample. Search for the region, easily found in VSCode:
 ```
@@ -43,6 +46,12 @@ Change the client bot info in the *getChildBotList* function.
 *getChildBotList* returns an array to highlight there should be a list of child bots that are called from the master bot.
 
 Child bots can call other child bots assuming the same principle. This communication will be invisible to the master bot.
+
+## Going to Production
+
+- The child bot list should be stored in the .bot file or storage outside the main bot.
+- The conversationList should be stored outside the mainbot to ensure resiliency. 
+- The child bots should send an event message to release the conversation to the master bot again.
 
 ## Testing the bot using Bot Framework Emulator **v4**
 [Bot Framework Emulator][5] is a desktop application that allows bot developers to test and debug their bots on localhost or running remotely through a tunnel.

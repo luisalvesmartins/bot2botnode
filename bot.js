@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 const { ActivityTypes } = require('botbuilder');
+const { TurnContext } = require('botbuilder-core');
 const requestpromise = require('request-promise');
 
 var conversationList=[];
@@ -23,12 +24,12 @@ class MyBot {
             {
                 BotId: childBot.id,
                 ConversationId: turnContext.activity.conversation.id,
-                OriginalServiceUri: turnContext.activity.serviceUrl
+                OriginalServiceUri: turnContext.activity.serviceUrl,
+                ConvReference: TurnContext.getConversationReference(turnContext.activity)
             };
             var p=conversationList.find(x=> x.BotId==childBot.id && x.OriginalServiceUri==turnContext.activity.serviceUrl);
             if (p==null)
             {
-                //console.log("NEW CONVERSATION")
                 conversationList.push(newConversation);
             }
 
@@ -48,10 +49,10 @@ class MyBot {
     getChildBotList(){
         return [
             {
-                id: 'other bot',
-                uri: 'http://localhost:3980/api/messages',
-                appId: 'f287cc36-3fb1-448f-9029-XXXXXXXXX',
-                appSecret: 'XXXXXXXXX'
+                id: 'one bot',
+                appId: "c7467981-4885-45bc-xxxxxxx",
+                appPassword: "nheblZUGDMN7xxxxx",
+                uri: "http://localhost:3979/api/messages",
             }
         ];
     }
@@ -66,7 +67,6 @@ class MyBot {
 function GetTokenAsync(microsoftAppId, microsoftAppPassword)
 {
     var OAuthEndpoint = 'https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token';
-
     return new Promise(function(resolve,reject) {
         requestpromise({
             method: 'POST',
@@ -92,7 +92,7 @@ async function ConversationForwardActivity(context, bot, replyUri) {
     activity.serviceUrl = replyUri;
     var json = JSON.stringify(activity);
 
-    await GetTokenAsync(bot.appId, bot.appSecret).then(
+    await GetTokenAsync(bot.appId, bot.appPassword).then(
         function(authToken){
 
     //console.log("SEND ACTIVITY")

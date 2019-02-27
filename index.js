@@ -9,6 +9,7 @@ const restify = require('restify');
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter } = require('botbuilder');
 
+
 // Import required bot configuration.
 const { BotConfiguration } = require('botframework-config');
 
@@ -81,15 +82,16 @@ server.post('/api/messages', (req, res) => {
 });
 
 //#region BOT2BOT CODE
-const requestpromise = require('request-promise');
 const jwt = require('jsonwebtoken');
+const { MicrosoftAppCredentials, ConnectorClient } = require('botframework-connector');
+
 
 
 server.use(restify.plugins.bodyParser())
 // conversation backchannel
 server.post('/v3/conversations/:conversationId/activities/:activityId', conversationCallBack);
 
-function conversationCallBack(req, res, next) {
+async function conversationCallBack(req, res, next) {
     //console.log("CALLBACK")
     var json=JSON.stringify(req.body);
 
@@ -106,22 +108,16 @@ function conversationCallBack(req, res, next) {
     l.find(x=> x.id==p.BotId && x.appId==appId);
     if (l)
     {
-        //console.log("SENDING MESSAGE")
-        requestpromise({
-            uri: p.OriginalServiceUri + req.getPath(),
-            method: 'POST',
-            headers: req.headers,
-            body: json
-        }).then(function(result){
-            // console.log("MESSAGE SENT");
-            // console.log(result);
-        },function(error){
-            console.log("ERROR2");
-            console.log("error sending the activity 2");
-            console.log(error.statusCode);
-            console.log(error.message);
-        });
-        
+        //this should be read from the .bot file
+        //here just for simplicity
+        var appId = "839c4d4e-213c-41ad-xxxxxxx";
+        var appPassword = "O1!%m[xB|uR^jxxxxxxx";
+
+        MicrosoftAppCredentials.trustServiceUrl(p.OriginalServiceUri);
+        var cred=new MicrosoftAppCredentials(appId, appPassword);
+        var botClient = new ConnectorClient(cred, {baseUri:p.OriginalServiceUri});
+        var activity=JSON.parse(json);
+        await botClient.conversations.sendToConversation(activity.conversation.id,activity);        
     }
     else
     {
