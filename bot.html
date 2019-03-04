@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Bot2Bot</title>
+<style>
+</style>
+  <link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
+  <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+  <script src="https://cdn.botframework.com/botframework-webchat/latest/CognitiveServices.js"></script>
+</head>
+<body onload="init()">
+    <div id="botWC" class=largeChild></div>
+<script>
+function init() {
+  //BOT
+  BotChat.App({
+    directLine: { secret: 'yCJlGMnnAOc.lano0D3uppw3Ct97s4QUA1mZLoeZ9eHFzK_xYpLxG5I' },
+    user: { id: 'userid' },
+    bot: { id: 'botid' },
+    resize: 'detect'
+      }, document.getElementById("botWC"));
+  }
+</script>
+  
+  </body>
+</html>

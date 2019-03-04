@@ -3,6 +3,9 @@ Bot master to Bot communication in node using REST (aka bot to bot)
 
 Sample nodejs code to demonstrate a master bot communicating with child bots. The bot is created using [Bot Framework][1]
 
+You can try it here: 
+https://lambot.blob.core.windows.net/github/bot2bot/bot.html
+
 ## Prerequisites
 
 For every child bot you'll need to know:

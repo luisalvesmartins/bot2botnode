@@ -105,23 +105,25 @@ async function conversationCallBack(req, res, next) {
     }
 
     var l=myBot.getChildBotList();
-    l.find(x=> x.id==p.BotId && x.appId==appId);
-    if (l)
-    {
-        //this should be read from the .bot file
-        //here just for simplicity
-        var appId = "839c4d4e-213c-41ad-xxxxxxx";
-        var appPassword = "O1!%m[xB|uR^jxxxxxxx";
-
-        MicrosoftAppCredentials.trustServiceUrl(p.OriginalServiceUri);
-        var cred=new MicrosoftAppCredentials(appId, appPassword);
-        var botClient = new ConnectorClient(cred, {baseUri:p.OriginalServiceUri});
-        var activity=JSON.parse(json);
-        await botClient.conversations.sendToConversation(activity.conversation.id,activity);        
-    }
-    else
-    {
-        console.log("NOT FOUND " + l);
+    if (l.length>0){
+        l.find(x=> x.id==p.BotId && x.appId==appId);
+        if (l)
+        {
+            //this should be read from the .bot file
+            //here just for simplicity
+            var appId=process.env.appId;
+            var appPassword = process.env.appPassword;
+    
+            MicrosoftAppCredentials.trustServiceUrl(p.OriginalServiceUri);
+            var cred=new MicrosoftAppCredentials(appId, appPassword);
+            var botClient = new ConnectorClient(cred, {baseUri:p.OriginalServiceUri});
+            var activity=JSON.parse(json);
+            await botClient.conversations.sendToConversation(activity.conversation.id,activity);        
+        }
+        else
+        {
+            console.log("NOT FOUND " + l);
+        }    
     }
     res.send(200);
 }
